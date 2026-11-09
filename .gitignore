@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+ENV/
+
+# Data / uploads
+data/*.sqlite3
+data/*.sqlite3-wal
+data/*.sqlite3-shm
+data/uploads/
+data/migration_backups/
+
+# OS
+Thumbs.db
+.DS_Store
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Тир-лист объектов</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header>
+    <div><h1>Тир-лист объектов</h1><p id="summary">Добавьте объекты или загрузите картинки.</p></div>
+    <div class="actions"><button id="ranking-button">Рейтинг</button><button id="undo-button" class="secondary">↶ Отменить</button></div>
+  </header>
+  <main>
+    <p id="message" role="status"></p>
+
+    <section id="comparison" class="comparison" hidden>
+      <div class="comparison-side comparison-left">
+        <button class="choice-card" id="left-choice" aria-label="Выбрать левый объект">
+          <div id="left-media" class="media-wrap"></div>
+          <div class="text-content">
+            <span id="left-name" class="obj-name"></span>
+            <div id="left-desc" class="obj-desc" onclick="event.stopPropagation()"></div>
+          </div>
+          <small id="left-info"></small>
+        </button>
+      </div>
+      <div class="versus">или</div>
+      <div class="comparison-side comparison-right">
+        <button class="choice-card" id="right-choice" aria-label="Выбрать правый объект">
+          <div id="right-media" class="media-wrap"></div>
+          <div class="text-content">
+            <span id="right-name" class="obj-name"></span>
+            <div id="right-desc" class="obj-desc" onclick="event.stopPropagation()"></div>
+          </div>
+          <small id="right-info"></small>
+        </button>
+      </div>
+    </section>
+
+    <section id="empty" class="empty card">
+      <h2>Нужно хотя бы два разных объекта</h2>
+      <p>Добавьте объекты кнопками ниже.</p>
+    </section>
+    <div id="controls" class="controls" hidden><button id="skip-button" class="secondary">Пропустить <kbd>Пробел</kbd></button></div>
+
+    <!-- Импорт объектов -->
+    <section class="card import-section">
+      <div class="section-head"><h2>Добавить объекты</h2></div>
+      <div class="import-row">
+        <div class="import-col" style="flex:1;">
+          <button id="upload-images-button">Загрузить картинки</button>
+          <input type="file" id="media-files" accept="image/*" multiple hidden>
+          <small class="hint">Для каждой картинки создастся отдельный объект с её именем.</small>
+        </div>
+        <div class="import-col" style="flex:1;">
+          <label>Импорт из текста (каждая строка — отдельный объект)</label>
+          <textarea id="text-import" rows="4" placeholder="Название объекта 1
+Название объекта 2
+Название объекта 3"></textarea>
+          <button id="import-text-button" class="secondary">Импортировать строки</button>
+          <small class="hint">Пустые строки пропускаются.</small>
+        </div>
+      </div>
+      <button id="add-object-button">+ Добавить объект вручную</button>
+    </section>
+
+    <!-- Экспорт / Импорт тир-листа -->
+    <section class="card import-section">
+      <div class="section-head"><h2>Сохранить / загрузить тир-лист</h2></div>
+      <div class="import-row">
+        <div class="import-col" style="flex:1;">
+          <label>Экспорт</label>
+          <button id="export-with-button">Сохранить с сравнениями (.tierl)</button>
+          <button id="export-without-button" class="secondary">Сохранить без сравнений (.tierl)</button>
+          <small class="hint">Сравнения = рейтинги, победы, история выборов.</small>
+        </div>
+        <div class="import-col" style="flex:1;">
+          <label>Импорт</label>
+          <button id="open-tierl-button">Открыть файл .tierl</button>
+          <input type="file" id="tierl-import" accept=".tierl,.zip" hidden>
+          <small class="hint">Файл .tierl — это ZIP-архив. При открытии текущий тир-лист заменяется.</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="objects card" id="objects-section">
+      <div class="section-head"><h2>Объекты</h2></div>
+      <p id="objects-hint">Каждый объект имеет название, описание (с гиперссылками) и опциональную картинку. Объекты без картинки отображаются как текстовые карточки.</p>
+      <div id="objects-list" class="objects-list"></div>
+    </section>
+    <div class="objects-toggle-wrap" style="margin:8px 0; text-align:right;">
+      <button id="toggle-objects" class="secondary">Свернуть объекты</button>
+    </div>
+
+    <section id="ranking" class="card ranking" hidden>
+      <div class="section-head"><h2>Рейтинг</h2><button id="close-ranking" class="secondary">Закрыть</button></div>
+      <p>«Неопределённость» уменьшается с числом сравнений. Недоступные объекты показаны внизу.</p>
+      <div class="table-wrap"><table><thead><tr><th>#</th><th>Объект</th><th>Картинка</th><th>Описание</th><th>Рейтинг</th><th>Победы / игры</th><th>Неопределённость</th><th></th></tr></thead><tbody id="ranking-body"></tbody></table></div>
+      <button id="reset-button" class="danger">Сбросить все сравнения</button>
+    </section>
+  </main>
+
+  <!-- Диалог добавления/редактирования объекта -->
+  <dialog id="object-dialog">
+    <form id="object-form" method="dialog">
+      <div class="form-group"><label>Название <span class="req">*</span></label><input id="obj-name" required></div>
+      <div class="form-group"><label>Описание (поддерживает гиперссылки, например <code>&lt;a href="https://..."&gt;ссылка&lt;/a&gt;</code>)</label><textarea id="obj-desc" rows="4" placeholder="Описание объекта…"></textarea><small class="hint">HTML-гипертекст: &lt;a href&gt;, &lt;b&gt;, &lt;i&gt;, &lt;br&gt; и т.д. Ссылки открываются в новой вкладке.</small></div>
+      <div class="form-group"><label>Картинка (опционально)</label><input type="file" id="obj-media" accept="image/*"><small class="hint">Можно загрузить картинку или оставить пустым — тогда объект будет текстовым.</small></div>
+      <div class="form-actions"><button type="button" id="obj-cancel" class="secondary">Отмена</button><button id="obj-save">Сохранить</button></div>
+    </form>
+  </dialog>
+
+  <footer>Клавиши: <kbd>←</kbd> левая, <kbd>→</kbd> правая, <kbd>Пробел</kbd> пропуск, <kbd>Z</kbd> отмена.</footer>
+  <script src="/static/app.js?v=6"></script>
+</body>
+</html>
