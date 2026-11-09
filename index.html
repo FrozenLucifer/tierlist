@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Тир-лист объектов</title>
-  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
-    <div><h1>Тир-лист объектов</h1><p id="summary">Добавьте объекты или загрузите картинки.</p></div>
+    <div><h1>Тир-лист объектов</h1><p id="summary">Добавьте объекты, чтобы начать сравнивать.</p></div>
     <div class="actions"><button id="ranking-button">Рейтинг</button><button id="undo-button" class="secondary">↶ Отменить</button></div>
   </header>
   <main>
@@ -79,7 +79,7 @@
           <label>Импорт</label>
           <button id="open-tierl-button">Открыть файл .tierl</button>
           <input type="file" id="tierl-import" accept=".tierl,.zip" hidden>
-          <small class="hint">Файл .tierl — это ZIP-архив. При открытии текущий тир-лист заменяется.</small>
+          <small class="hint">При открытии текущий тир-лист заменяется.</small>
         </div>
       </div>
     </section>
@@ -95,7 +95,7 @@
 
     <section id="ranking" class="card ranking" hidden>
       <div class="section-head"><h2>Рейтинг</h2><button id="close-ranking" class="secondary">Закрыть</button></div>
-      <p>«Неопределённость» уменьшается с числом сравнений. Недоступные объекты показаны внизу.</p>
+      <p>«Неопределённость» уменьшается с числом сравнений.</p>
       <div class="table-wrap"><table><thead><tr><th>#</th><th>Объект</th><th>Картинка</th><th>Описание</th><th>Рейтинг</th><th>Победы / игры</th><th>Неопределённость</th><th></th></tr></thead><tbody id="ranking-body"></tbody></table></div>
       <button id="reset-button" class="danger">Сбросить все сравнения</button>
     </section>
@@ -105,13 +105,14 @@
   <dialog id="object-dialog">
     <form id="object-form" method="dialog">
       <div class="form-group"><label>Название <span class="req">*</span></label><input id="obj-name" required></div>
-      <div class="form-group"><label>Описание (поддерживает гиперссылки, например <code>&lt;a href="https://..."&gt;ссылка&lt;/a&gt;</code>)</label><textarea id="obj-desc" rows="4" placeholder="Описание объекта…"></textarea><small class="hint">HTML-гипертекст: &lt;a href&gt;, &lt;b&gt;, &lt;i&gt;, &lt;br&gt; и т.д. Ссылки открываются в новой вкладке.</small></div>
+      <div class="form-group"><label>Описание (поддерживает гиперссылки, например &lt;a href="https://..."&gt;ссылка&lt;/a&gt;)</label><textarea id="obj-desc" rows="4" placeholder="Описание объекта…"></textarea><small class="hint">HTML-гипертекст: &lt;a href&gt;, &lt;b&gt;, &lt;i&gt;, &lt;br&gt; и т.д. Ссылки открываются в новой вкладке.</small></div>
       <div class="form-group"><label>Картинка (опционально)</label><input type="file" id="obj-media" accept="image/*"><small class="hint">Можно загрузить картинку или оставить пустым — тогда объект будет текстовым.</small></div>
       <div class="form-actions"><button type="button" id="obj-cancel" class="secondary">Отмена</button><button id="obj-save">Сохранить</button></div>
     </form>
   </dialog>
 
-  <footer>Клавиши: <kbd>←</kbd> левая, <kbd>→</kbd> правая, <kbd>Пробел</kbd> пропуск, <kbd>Z</kbd> отмена.</footer>
-  <script src="/static/app.js?v=6"></script>
+  <footer>Клавиши: <kbd>←</kbd> левая, <kbd>→</kbd> правая, <kbd>Пробел</kbd> пропуск, <kbd>Z</kbd> отмена. Данные хранятся в браузере.</footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="app.js?v=1"></script>
 </body>
 </html>
