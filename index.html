@@ -3,116 +3,201 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Тир-лист объектов</title>
+  <title data-i18n-text="appTitle">Рейтинг сравнений</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
-    <div><h1>Тир-лист объектов</h1><p id="summary">Добавьте объекты, чтобы начать сравнивать.</p></div>
-    <div class="actions"><button id="ranking-button">Рейтинг</button><button id="undo-button" class="secondary">↶ Отменить</button></div>
+    <div><h1 data-i18n-text="appTitle">Рейтинг сравнений</h1><p id="summary">Добавьте объекты, чтобы начать сравнивать.</p></div>
+    <div class="actions">
+      <div class="lang-switch" id="lang-switch" data-i18n-title="switchLang" title="Язык">
+        <button id="lang-ru" data-lang="ru" type="button" title="Русский">🇷🇺 Русский</button>
+        <button id="lang-en" data-lang="en" type="button" title="English">🇬🇧 English</button>
+      </div>
+    </div>
   </header>
+
+  <!-- Вкладки вверху страницы -->
+  <nav class="tabs">
+    <button class="tab active" data-tab="compare" data-i18n-text="tabCompare">Сравнение</button>
+    <button class="tab" data-tab="ranking" data-i18n-text="tabRanking">Рейтинг</button>
+    <button class="tab" data-tab="list" data-i18n-text="tabList">Список</button>
+  </nav>
+
   <main>
     <p id="message" role="status"></p>
 
-    <section id="comparison" class="comparison" hidden>
-      <div class="comparison-side comparison-left">
-        <button class="choice-card" id="left-choice" aria-label="Выбрать левый объект">
-          <div id="left-media" class="media-wrap"></div>
-          <div class="text-content">
-            <span id="left-name" class="obj-name"></span>
-            <div id="left-desc" class="obj-desc" onclick="event.stopPropagation()"></div>
+    <!-- === Вкладка: Сравнение === -->
+    <section id="tab-compare" class="tab-content active">
+      <section id="comparison" class="comparison" hidden>
+        <div class="comparison-side comparison-left">
+          <div class="choice-card" id="left-card" role="button" aria-label="Выбрать левый объект" tabindex="0">
+            <div id="left-media" class="media-wrap">
+              <button class="pin-toggle card-pin" id="left-pin" type="button" aria-label="Зафиксировать">🔓</button>
+            </div>
+            <div class="text-content">
+              <span id="left-name" class="obj-name"></span>
+              <div id="left-desc" class="obj-desc" onclick="event.stopPropagation()"></div>
+            </div>
+            <small id="left-info"></small>
           </div>
-          <small id="left-info"></small>
-        </button>
-      </div>
-      <div class="versus">или</div>
-      <div class="comparison-side comparison-right">
-        <button class="choice-card" id="right-choice" aria-label="Выбрать правый объект">
-          <div id="right-media" class="media-wrap"></div>
-          <div class="text-content">
-            <span id="right-name" class="obj-name"></span>
-            <div id="right-desc" class="obj-desc" onclick="event.stopPropagation()"></div>
-          </div>
-          <small id="right-info"></small>
-        </button>
-      </div>
-    </section>
-
-    <section id="empty" class="empty card">
-      <h2>Нужно хотя бы два разных объекта</h2>
-      <p>Добавьте объекты кнопками ниже.</p>
-    </section>
-    <div id="controls" class="controls" hidden><button id="skip-button" class="secondary">Пропустить <kbd>Пробел</kbd></button></div>
-
-    <!-- Импорт объектов -->
-    <section class="card import-section">
-      <div class="section-head"><h2>Добавить объекты</h2></div>
-      <div class="import-row">
-        <div class="import-col" style="flex:1;">
-          <button id="upload-images-button">Загрузить картинки</button>
-          <input type="file" id="media-files" accept="image/*" multiple hidden>
-          <small class="hint">Для каждой картинки создастся отдельный объект с её именем.</small>
         </div>
-        <div class="import-col" style="flex:1;">
-          <label>Импорт из текста (каждая строка — отдельный объект)</label>
-          <textarea id="text-import" rows="4" placeholder="Название объекта 1
+        <div class="versus">или</div>
+        <div class="comparison-side comparison-right">
+          <div class="choice-card" id="right-card" role="button" aria-label="Выбрать правый объект" tabindex="0">
+            <div id="right-media" class="media-wrap">
+              <button class="pin-toggle card-pin" id="right-pin" type="button" aria-label="Зафиксировать">🔓</button>
+            </div>
+            <div class="text-content">
+              <span id="right-name" class="obj-name"></span>
+              <div id="right-desc" class="obj-desc" onclick="event.stopPropagation()"></div>
+            </div>
+            <small id="right-info"></small>
+          </div>
+        </div>
+      </section>
+
+      <section id="empty-compare" class="empty card">
+        <h2 data-i18n-text="emptyCompareTitle">Нужно хотя бы два объекта</h2>
+        <p data-i18n-html="emptyCompareText">Добавьте объекты во вкладке <b>Список</b>, затем вернитесь сюда для сравнения.</p>
+      </section>
+      <div id="controls" class="controls" hidden>
+        <button id="undo-button" class="secondary" type="button" data-i18n-text="undo">↶ Отменить</button>
+        <button id="skip-button" class="secondary" type="button" data-i18n-html="skip">Пропустить <kbd>Пробел</kbd></button>
+      </div>
+    </section>
+
+    <!-- === Вкладка: Рейтинг === -->
+    <section id="tab-ranking" class="tab-content" hidden>
+      <section id="ranking" class="card ranking">
+        <div class="section-head"><h2 data-i18n-text="rankingTitle">Рейтинг</h2></div>
+        <p data-i18n-text="rankingUncertainty">«Неопределённость» уменьшается с числом сравнений.</p>
+
+        <!-- Подвкладки -->
+        <nav class="sub-tabs">
+          <button class="sub-tab active" data-subtab="table" data-i18n-text="subTabTable">Таблица</button>
+          <button class="sub-tab" data-subtab="tierlist" data-i18n-text="subTabTierlist">Тир-лист</button>
+        </nav>
+
+        <!-- Вид: Таблица -->
+        <div id="view-table" class="sub-tab-content active">
+          <div class="table-wrap"><table><thead><tr>
+            <th data-i18n-text="thRank">#</th>
+            <th data-i18n-text="thObject">Объект</th>
+            <th data-i18n-text="thImage">Картинка</th>
+            <th data-i18n-text="thDescription">Описание</th>
+            <th data-i18n-text="thRating">Рейтинг</th>
+            <th data-i18n-text="thWinsComparisons">Победы / сравнения</th>
+            <th data-i18n-text="thUncertainty">Неопределённость</th>
+            <th></th>
+          </tr></thead><tbody id="ranking-body"></tbody></table></div>
+          <button id="reset-button" class="danger" type="button" data-i18n-text="resetAll">Сбросить все сравнения</button>
+        </div>
+
+        <!-- Вид: Тир-лист -->
+        <div id="view-tierlist" class="sub-tab-content" hidden>
+          <div class="tier-controls" style="margin-bottom:12px;">
+            <button id="add-tier" type="button" data-i18n-text="addTier">+ Тир</button>
+            <button id="remove-tier" class="danger" type="button" data-i18n-text="removeTier">- Удалить тир</button>
+            <button id="reset-tiers" class="secondary" type="button" data-i18n-text="resetTiers">Сброс тиров</button>
+          </div>
+          <div class="tier-scale">
+            <div class="tier-scale-bar" id="tier-scale-bar"></div>
+            <div class="tier-scale-inputs" id="tier-scale-inputs"></div>
+            <div class="tier-scale-range">
+              <span id="tier-range-min" class="tier-range-val"></span>
+              <span id="tier-range-max" class="tier-range-val"></span>
+            </div>
+            <div class="tier-scale-labels" id="tier-scale-labels"></div>
+          </div>
+          <div class="tier-containers" id="tier-containers"></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- === Вкладка: Список === -->
+    <section id="tab-list" class="tab-content" hidden>
+      <!-- Импорт объектов -->
+      <section class="card import-section">
+        <div class="section-head"><h2 data-i18n-text="addObjects">Добавить объекты</h2></div>
+        <div class="import-row">
+          <div class="import-col" style="flex:1;">
+            <button id="upload-images-button" type="button" data-i18n-text="uploadImages">Загрузить картинки</button>
+            <input type="file" id="media-files" accept="image/*" multiple hidden>
+            <small class="hint" data-i18n-text="hintImages">Для каждой картинки создастся отдельный объект с её именем.</small>
+          </div>
+          <div class="import-col" style="flex:1;">
+            <label data-i18n-text="importTextLabel">Импорт из текста (каждая строка — отдельный объект)</label>
+            <textarea id="text-import" rows="4" data-i18n-placeholder="textImportPlaceholder" placeholder="Название объекта 1
 Название объекта 2
 Название объекта 3"></textarea>
-          <button id="import-text-button" class="secondary">Импортировать строки</button>
-          <small class="hint">Пустые строки пропускаются.</small>
+            <button id="import-text-button" class="secondary" type="button" data-i18n-text="importTextBtn">Импортировать строки</button>
+            <small class="hint" data-i18n-text="hintEmptyLines">Пустые строки пропускаются.</small>
+          </div>
         </div>
-      </div>
-      <button id="add-object-button">+ Добавить объект вручную</button>
-    </section>
+        <button id="add-object-button" type="button" data-i18n-text="addManual">+ Добавить объект вручную</button>
+      </section>
 
-    <!-- Экспорт / Импорт тир-листа -->
-    <section class="card import-section">
-      <div class="section-head"><h2>Сохранить / загрузить тир-лист</h2></div>
-      <div class="import-row">
-        <div class="import-col" style="flex:1;">
-          <label>Экспорт</label>
-          <button id="export-with-button">Сохранить с сравнениями (.tierl)</button>
-          <button id="export-without-button" class="secondary">Сохранить без сравнений (.tierl)</button>
-          <small class="hint">Сравнения = рейтинги, победы, история выборов.</small>
+      <!-- Экспорт / Импорт рейтинга -->
+      <section class="card import-section">
+        <div class="section-head"><h2 data-i18n-text="saveLoad">Сохранить / загрузить рейтинг</h2></div>
+        <div class="import-row">
+          <div class="import-col" style="flex:1;">
+            <label data-i18n-text="exportLabel">Экспорт</label>
+            <button id="export-with-button" type="button" data-i18n-text="exportWith">Сохранить с сравнениями (.tierl)</button>
+            <button id="export-without-button" class="secondary" type="button" data-i18n-text="exportWithout">Сохранить без сравнений (.tierl)</button>
+            <small class="hint" data-i18n-text="hintExport">Сравнения = рейтинги, победы, история выборов.</small>
+          </div>
+          <div class="import-col" style="flex:1;">
+            <label data-i18n-text="importLabel">Импорт</label>
+            <button id="open-tierl-button" type="button" data-i18n-text="openTierl">Открыть файл .tierl</button>
+            <input type="file" id="tierl-import" accept=".tierl,.zip" hidden>
+            <small class="hint" data-i18n-text="hintImport">При открытии текущий рейтинг заменяется.</small>
+          </div>
         </div>
-        <div class="import-col" style="flex:1;">
-          <label>Импорт</label>
-          <button id="open-tierl-button">Открыть файл .tierl</button>
-          <input type="file" id="tierl-import" accept=".tierl,.zip" hidden>
-          <small class="hint">При открытии текущий тир-лист заменяется.</small>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="objects card" id="objects-section">
-      <div class="section-head"><h2>Объекты</h2></div>
-      <p id="objects-hint">Каждый объект имеет название, описание (с гиперссылками) и опциональную картинку. Объекты без картинки отображаются как текстовые карточки.</p>
-      <div id="objects-list" class="objects-list"></div>
-    </section>
-    <div class="objects-toggle-wrap" style="margin:8px 0; text-align:right;">
-      <button id="toggle-objects" class="secondary">Свернуть объекты</button>
-    </div>
-
-    <section id="ranking" class="card ranking" hidden>
-      <div class="section-head"><h2>Рейтинг</h2><button id="close-ranking" class="secondary">Закрыть</button></div>
-      <p>«Неопределённость» уменьшается с числом сравнений.</p>
-      <div class="table-wrap"><table><thead><tr><th>#</th><th>Объект</th><th>Картинка</th><th>Описание</th><th>Рейтинг</th><th>Победы / игры</th><th>Неопределённость</th><th></th></tr></thead><tbody id="ranking-body"></tbody></table></div>
-      <button id="reset-button" class="danger">Сбросить все сравнения</button>
+      <section class="objects card" id="objects-section">
+        <div class="section-head"><h2 data-i18n-text="objectsTitle">Объекты</h2></div>
+        <p id="objects-hint" data-i18n-text="objectsHint">Каждый объект имеет название, описание (с гиперссылками) и опциональную картинку. Объекты без картинки отображаются как текстовые карточки.</p>
+        <div id="objects-list" class="objects-list"></div>
+      </section>
     </section>
   </main>
 
   <!-- Диалог добавления/редактирования объекта -->
   <dialog id="object-dialog">
     <form id="object-form" method="dialog">
-      <div class="form-group"><label>Название <span class="req">*</span></label><input id="obj-name" required></div>
-      <div class="form-group"><label>Описание (поддерживает гиперссылки, например &lt;a href="https://..."&gt;ссылка&lt;/a&gt;)</label><textarea id="obj-desc" rows="4" placeholder="Описание объекта…"></textarea><small class="hint">HTML-гипертекст: &lt;a href&gt;, &lt;b&gt;, &lt;i&gt;, &lt;br&gt; и т.д. Ссылки открываются в новой вкладке.</small></div>
-      <div class="form-group"><label>Картинка (опционально)</label><input type="file" id="obj-media" accept="image/*"><small class="hint">Можно загрузить картинку или оставить пустым — тогда объект будет текстовым.</small></div>
-      <div class="form-actions"><button type="button" id="obj-cancel" class="secondary">Отмена</button><button id="obj-save">Сохранить</button></div>
+      <div class="form-group"><label data-i18n-html="dialogNameLabel">Название <span class="req">*</span></label><input id="obj-name" required></div>
+      <div class="form-group"><label data-i18n-text="dialogDescLabel">Описание (поддерживает гиперссылки)</label><textarea id="obj-desc" rows="4" data-i18n-placeholder="dialogDescPlaceholder" placeholder="Описание объекта…"></textarea></div>
+      <div class="form-group"><label data-i18n-text="dialogMediaLabel">Картинка (опционально)</label><input type="file" id="obj-media" accept="image/*"><small class="hint" data-i18n-text="dialogMediaHint">Можно загрузить картинку или оставить пустым — тогда объект будет текстовым.</small></div>
+      <div class="form-actions"><button type="button" id="obj-cancel" class="secondary" data-i18n-text="dialogCancel">Отмена</button><button id="obj-save" type="submit" data-i18n-text="dialogSave">Сохранить</button></div>
     </form>
   </dialog>
 
-  <footer>Клавиши: <kbd>←</kbd> левая, <kbd>→</kbd> правая, <kbd>Пробел</kbd> пропуск, <kbd>Z</kbd> отмена. Данные хранятся в браузере.</footer>
+  <!-- Диалог редактирования тира (имя + цвет) -->
+  <dialog id="tier-edit-dialog">
+    <form id="tier-edit-form" method="dialog">
+      <div class="form-group"><label data-i18n-text="editTier">Редактировать тир</label><input id="tier-edit-name" required></div>
+      <div class="form-group"><label>Цвет</label><div class="color-picker" id="tier-edit-colors"></div><input type="color" id="tier-edit-color-custom" value="#ffd700"><small class="hint">или выберите свой цвет</small></div>
+      <div class="form-actions"><button type="button" id="tier-edit-cancel" class="secondary" data-i18n-text="dialogCancel">Отмена</button><button id="tier-edit-save" type="submit" data-i18n-text="dialogSave">Сохранить</button></div>
+    </form>
+  </dialog>
+
+  <!-- Диалог подтверждения при открытии файла с несохранёнными изменениями -->
+  <dialog id="save-confirm-dialog">
+    <div class="dialog-content">
+      <p data-i18n-text="saveConfirmTitle">Есть несохранённые изменения. Что сделать?</p>
+      <div class="dialog-actions">
+        <button id="save-confirm-save" type="button" data-i18n-text="saveConfirmSave">Сохранить текущий рейтинг</button>
+        <button id="save-confirm-dont-save" class="secondary" type="button" data-i18n-text="saveConfirmDontSave">Не сохранять</button>
+        <button id="save-confirm-cancel" class="secondary" type="button" data-i18n-text="saveConfirmCancel">Отмена</button>
+      </div>
+    </div>
+  </dialog>
+
+  <footer data-i18n-html="footerKeys">Клавиши: <kbd>←</kbd> левая, <kbd>→</kbd> правая, <kbd>Пробел</kbd> пропуск, <kbd>Z</kbd> отмена. Данные хранятся в браузере.</footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="app.js?v=1"></script>
+  <script src="app.js?v=17"></script>
 </body>
 </html>
