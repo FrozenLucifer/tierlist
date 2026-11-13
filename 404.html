@@ -7,7 +7,12 @@
   <meta http-equiv="refresh" content="0; url=/">
 </head>
 <body>
-  <p>Перенаправление на главную страницу…</p>
-  <script>window.location.replace('/');</script>
+  <p id="redirectMsg">Перенаправление на главную страницу…</p>
+  <script>
+    const lang = localStorage.getItem('cr_lang') || 'ru';
+    const msg = lang === 'en' ? 'Redirecting to main page...' : 'Перенаправление на главную страницу…';
+    document.getElementById('redirectMsg').textContent = msg;
+    window.location.replace('/');
+  </script>
 </body>
 </html>

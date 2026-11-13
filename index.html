@@ -10,9 +10,9 @@
   <header>
     <div><h1 data-i18n-text="appTitle">Рейтинг сравнений</h1><p id="summary">Добавьте объекты, чтобы начать сравнивать.</p></div>
     <div class="actions">
-      <div class="lang-switch" id="lang-switch" data-i18n-title="switchLang" title="Язык">
-        <button id="lang-ru" data-lang="ru" type="button" title="Русский">🇷🇺 Русский</button>
-        <button id="lang-en" data-lang="en" type="button" title="English">🇬🇧 English</button>
+      <div class="lang-switch" id="lang-switch" data-i18n-title="switchLang">
+        <button id="lang-ru" data-lang="ru" type="button" data-i18n-title="langRu">🇷🇺 Русский</button>
+        <button id="lang-en" data-lang="en" type="button" data-i18n-title="langEn">🇬🇧 English</button>
       </div>
     </div>
   </header>
@@ -31,9 +31,9 @@
     <section id="tab-compare" class="tab-content active">
       <section id="comparison" class="comparison" hidden>
         <div class="comparison-side comparison-left">
-          <div class="choice-card" id="left-card" role="button" aria-label="Выбрать левый объект" tabindex="0">
+          <div class="choice-card" id="left-card" role="button" data-i18n-aria-label="selectLeft" tabindex="0">
             <div id="left-media" class="media-wrap">
-              <button class="pin-toggle card-pin" id="left-pin" type="button" aria-label="Зафиксировать">🔓</button>
+              <button class="pin-toggle card-pin" id="left-pin" type="button" data-i18n-aria-label="pinTooltip">🔓</button>
             </div>
             <div class="text-content">
               <span id="left-name" class="obj-name"></span>
@@ -42,11 +42,11 @@
             <small id="left-info"></small>
           </div>
         </div>
-        <div class="versus">или</div>
+        <div class="versus" data-i18n-text="versus">или</div>
         <div class="comparison-side comparison-right">
-          <div class="choice-card" id="right-card" role="button" aria-label="Выбрать правый объект" tabindex="0">
+          <div class="choice-card" id="right-card" role="button" data-i18n-aria-label="selectRight" tabindex="0">
             <div id="right-media" class="media-wrap">
-              <button class="pin-toggle card-pin" id="right-pin" type="button" aria-label="Зафиксировать">🔓</button>
+              <button class="pin-toggle card-pin" id="right-pin" type="button" data-i18n-aria-label="pinTooltip">🔓</button>
             </div>
             <div class="text-content">
               <span id="right-name" class="obj-name"></span>
@@ -179,7 +179,7 @@
   <dialog id="tier-edit-dialog">
     <form id="tier-edit-form" method="dialog">
       <div class="form-group"><label data-i18n-text="editTier">Редактировать тир</label><input id="tier-edit-name" required></div>
-      <div class="form-group"><label>Цвет</label><div class="color-picker" id="tier-edit-colors"></div><input type="color" id="tier-edit-color-custom" value="#ffd700"><small class="hint">или выберите свой цвет</small></div>
+      <div class="form-group"><label>Цвет</label><div class="color-picker" id="tier-edit-colors"></div><input type="color" id="tier-edit-color-custom" value="#ffd700"><small class="hint" data-i18n-text="orChooseColor">или выберите свой цвет</small></div>
       <div class="form-actions"><button type="button" id="tier-edit-cancel" class="secondary" data-i18n-text="dialogCancel">Отмена</button><button id="tier-edit-save" type="submit" data-i18n-text="dialogSave">Сохранить</button></div>
     </form>
   </dialog>

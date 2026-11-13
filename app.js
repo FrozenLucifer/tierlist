@@ -18,6 +18,13 @@ const T = {
     switchLang: 'Язык',
     langRu: 'Русский',
     langEn: 'English',
+    versus: 'или',
+    selectLeft: 'Выбрать левый объект',
+    selectRight: 'Выбрать правый объект',
+    pinTooltip: 'Зафиксировать',
+    unpinTooltip: 'Снять фиксацию',
+    orChooseColor: 'или выберите свой цвет',
+    langEn: 'English',
     emptyCompareTitle: 'Нужно хотя бы два объекта',
     emptyCompareText: 'Добавьте объекты во вкладке <b>Список</b>, затем вернитесь сюда для сравнения.',
     skip: 'Пропустить <kbd>Пробел</kbd>',
@@ -45,6 +52,9 @@ const T = {
     editTier: 'Редактировать тир',
     resetTiers: 'Сброс тиров',
     enterTierName: 'Введите название тира',
+    expandTier: 'Развернуть',
+    collapseTier: 'Свернуть',
+    ratingLabel: 'Рейтинг',
     uploadImages: 'Загрузить картинки',
     hintImages: 'Для каждой картинки создастся отдельный объект с её именем.',
     importTextLabel: 'Импорт из текста (каждая строка — отдельный объект)',
@@ -119,6 +129,12 @@ const T = {
     switchLang: 'Language',
     langRu: 'Русский',
     langEn: 'English',
+    versus: 'vs',
+    selectLeft: 'Select left object',
+    selectRight: 'Select right object',
+    pinTooltip: 'Pin',
+    unpinTooltip: 'Unpin',
+    orChooseColor: 'or choose your own color',
     emptyCompareTitle: 'At least two objects needed',
     emptyCompareText: 'Add objects in the <b>List</b> tab, then return here to compare.',
     skip: 'Skip <kbd>Space</kbd>',
@@ -146,6 +162,9 @@ const T = {
     editTier: 'Edit tier',
     resetTiers: 'Reset tiers',
     enterTierName: 'Enter tier name',
+    expandTier: 'Expand',
+    collapseTier: 'Collapse',
+    ratingLabel: 'Rating',
     uploadImages: 'Upload images',
     hintImages: 'A separate object is created for each image, using its name.',
     importTextLabel: 'Import from text (each line is a separate object)',
@@ -245,6 +264,9 @@ function applyLang() {
   });
   document.querySelectorAll('[data-i18n-value]').forEach((el) => {
     el.value = t(el.dataset.i18nValue);
+  });
+  document.querySelectorAll('[data-i18n-aria-label]').forEach((el) => {
+    el.setAttribute('aria-label', t(el.dataset.i18nAriaLabel));
   });
   const ruBtn = $('lang-ru');
   const enBtn = $('lang-en');
@@ -1255,7 +1277,7 @@ function renderTierList() {
     tierHeader.className = 'tier-header';
     tierHeader.style.borderLeft = `4px solid ${tier.color}`;
     const isCollapsed = collapsedTiers.has(tier.id);
-    tierHeader.innerHTML = `<span class="tier-name" style="color:${tier.color}">${escapeHtml(tier.name)}</span> <span class="tier-count">(${tierObjs.length})</span> <button class="edit-tier-btn" type="button" data-id="${tier.id}" title="${t('editTier')}">✎</button> <button class="collapse-tier-btn" type="button" data-id="${tier.id}" title="${isCollapsed ? 'Развернуть' : 'Свернуть'}">${isCollapsed ? '▶' : '▼'}</button>`;
+    tierHeader.innerHTML = `<span class="tier-name" style="color:${tier.color}">${escapeHtml(tier.name)}</span> <span class="tier-count">(${tierObjs.length})</span> <button class="edit-tier-btn" type="button" data-id="${tier.id}" title="${t('editTier')}">✎</button> <button class="collapse-tier-btn" type="button" data-id="${tier.id}" title="${isCollapsed ? t('expandTier') : t('collapseTier')}">${isCollapsed ? '▶' : '▼'}</button>`;
 
     const tierItems = document.createElement('div');
     tierItems.className = 'tier-items' + (isCollapsed ? ' collapsed' : '');
@@ -1270,7 +1292,7 @@ function renderTierList() {
       tierObjs.forEach(it => {
         const card = document.createElement('div');
         card.className = 'tier-item-card';
-        card.title = `${it.name}\nРейтинг: ${it.rating.toFixed(3)}`;
+        card.title = `${it.name}\n${t('ratingLabel')}: ${it.rating.toFixed(3)}`;
         card.innerHTML = `
           <div class="tier-item-media">${mediaHtml(it)}</div>
           <div class="tier-item-name">${escapeHtml(it.name)}</div>
