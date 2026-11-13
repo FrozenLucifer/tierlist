@@ -1237,12 +1237,16 @@ function renderTierList() {
     });
     
   // Контейнеры тиров с объектами — простой ряд, перенос по центру
-  sorted.forEach((tier) => {
-    const prevTier = sorted.find(t => t.minRating > tier.minRating);
-    const tierMin = tier.minRating;
-    const tierMax = prevTier ? prevTier.minRating : range.max;
+  sorted.forEach((tier, idx) => {
+    const tierMin = Number(tier.minRating);
+    const tierMax = idx > 0
+      ? Number(sorted[idx - 1].minRating)
+      : range.max;
 
-    const tierObjs = activeItems.filter(it => it.rating >= tierMin && it.rating < tierMax);
+    const tierObjs = activeItems.filter(it => {
+      const rating = Number(it.rating);
+      return rating >= tierMin && rating < tierMax;
+    });
 
     const tierContainer = document.createElement('div');
     tierContainer.className = 'tier-container';
